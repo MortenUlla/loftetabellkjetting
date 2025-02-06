@@ -119,7 +119,9 @@
             <select id="attachment" onchange="updateImages()">
                 <option value="Rett">Rett</option>
                 <option value="Snaret">Snaret</option>
-                <option value="Uform">U-form</option>
+                <option value="U/Dobbel">U/Dobbel</option>
+                <option value="U: 0°-45°">U: 0°-45°</option>
+                <option value="U: 45°-60°">U: 45°-60°</option>
             </select>
 
             <label for="parts">Velg Antall Parter:</label>
@@ -159,7 +161,9 @@
         const attachmentImages = {
             "Rett": "kjetting_rett.png",
             "Snaret": "kjetting_snaret.png",
-            "Uform": "kjetting_uform.png"
+            "U/Dobbel": "kjetting_uform.png",
+            "U: 0°-45°": "toparter_45.png",
+            "U: 45°-60°": "toparter_452.png"
         };
 
         // Bildemapping for antall parter
@@ -201,7 +205,7 @@
             const attachmentFactors = {
                 "Rett": 1.0,
                 "Snaret": 0.8,
-                "Uform": 2.0
+                "U/Dobbel": 2.0
             };
 
             let attachmentFactor = attachmentFactors[attachment] || 1.0;
