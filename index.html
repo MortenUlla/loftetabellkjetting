@@ -5,25 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Løftekalkulator - Kjetting</title>
     <style>
+        * { box-sizing: border-box; }
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
         }
-        .calculator {
+        .container {
             background-color: #ffffff;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 25px;
-            max-width: 500px;
+            padding: 20px;
+            max-width: 900px;
             width: 100%;
-            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .calculator {
+            flex: 1 1 45%;
+            margin-bottom: 20px;
+        }
+        .image-display {
+            flex: 1 1 45%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         h1 {
+            text-align: center;
+            margin-bottom: 20px;
             font-size: 24px;
             color: #333;
         }
@@ -31,7 +46,7 @@
             display: block;
             margin-top: 15px;
             font-weight: bold;
-            text-align: left;
+            color: #333;
         }
         select {
             width: 100%;
@@ -40,81 +55,127 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
+            background-color: #fafafa;
+            color: #333;
         }
         button {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             background-color: #007BFF;
-            color: white;
+            color: #fff;
             border: none;
             border-radius: 5px;
             font-size: 18px;
             cursor: pointer;
             margin-top: 20px;
         }
-        button:hover {
-            background-color: #0056b3;
-        }
+        button:hover { background-color: #0056b3; }
         .result {
             margin-top: 20px;
             font-size: 20px;
             font-weight: bold;
-            color: #333;
-            background: #e6f7ff;
+            text-align: center;
+            background-color: #f0f8ff;
             padding: 10px;
             border-radius: 5px;
+        }
+        .image-display img {
+            max-width: 100%;
+            height: auto;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        @media (max-width: 768px) {
+            .calculator, .image-display {
+                flex: 1 1 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="calculator">
-        <h1>Løftekalkulator - Kjetting, Grade 80</h1>
-        <label for="dimension">Velg Kjettingdimensjon (mm):</label>
-        <select id="dimension">
-            <option value="6">6 mm</option>
-            <option value="8">8 mm</option>
-            <option value="10">10 mm</option>
-            <option value="13">13 mm</option>
-            <option value="16">16 mm</option>
-            <option value="20">20 mm</option>
-            <option value="22">22 mm</option>
-            <option value="26">26 mm</option>
-        </select>
+    <div class="container">
+        <!-- Kalkulator -->
+        <div class="calculator">
+            <h1>Løftekalkulator - Kjetting, Grade 80</h1>
 
-        <label for="attachment">Velg Stroppetype:</label>
-        <select id="attachment">
-            <option value="Rett">Rett</option>
-            <option value="Snaret">Snaret</option>
-            <option value="Uform">U-form</option>
-        </select>
+            <label for="dimension">Velg Kjettingdimensjon (mm):</label>
+            <select id="dimension">
+                <option value="6">6 mm</option>
+                <option value="8">8 mm</option>
+                <option value="10">10 mm</option>
+                <option value="13">13 mm</option>
+                <option value="16">16 mm</option>
+                <option value="20">20 mm</option>
+                <option value="22">22 mm</option>
+                <option value="26">26 mm</option>
+            </select>
 
-        <label for="parts">Velg Antall Parter:</label>
-        <select id="parts">
-            <option value="1">1-Part</option>
-            <option value="2">2-Part</option>
-            <option value="3">3-Part</option>
-            <option value="4">4-Part</option>
-        </select>
+            <label for="attachment">Velg Stroppetype:</label>
+            <select id="attachment" onchange="updateImages()">
+                <option value="Rett">Rett</option>
+                <option value="Snaret">Snaret</option>
+                <option value="Uform">U-form</option>
+            </select>
 
-        <label for="angle">Velg Arbeidsvinkel:</label>
-        <select id="angle">
-            <option value="1.0">0°</option>
-            <option value="0.8">1°-30°</option>
-            <option value="0.7">31°-45°</option>
-            <option value="0.5">46°-60°</option>
-        </select>
+            <label for="parts">Velg Antall Parter:</label>
+            <select id="parts" onchange="updateImages()">
+                <option value="1">1-Part</option>
+                <option value="2">2-Part</option>
+                <option value="3">3-Part</option>
+                <option value="4">4-Part</option>
+            </select>
 
-        <label for="symmetry">Symmetrisk/Usymmetrisk:</label>
-        <select id="symmetry">
-            <option value="1.0">Symmetrisk</option>
-            <option value="0.7">Usymmetrisk</option>
-        </select>
+            <label for="angle">Velg Arbeidsvinkel:</label>
+            <select id="angle">
+                <option value="1.0">0°</option>
+                <option value="0.8">1°-30°</option>
+                <option value="0.7">31°-45°</option>
+                <option value="0.5">46°-60°</option>
+            </select>
 
-        <button onclick="calculate()">Beregn</button>
-        <div class="result" id="result">Maks belastning: <span id="maxLoad">0</span> tonn</div>
+            <label for="symmetry">Symmetrisk/Usymmetrisk:</label>
+            <select id="symmetry">
+                <option value="1.0">Symmetrisk</option>
+                <option value="0.7">Usymmetrisk</option>
+            </select>
+
+            <button onclick="calculate()">Beregn</button>
+            <div class="result" id="result">Maks belastning: <span id="maxLoad">0</span> tonn</div>
+        </div>
+
+        <!-- Bildevisning -->
+        <div class="image-display">
+            <img id="attachmentImage" src="kjetting_rett.png" alt="Innfestingsmåte">
+            <img id="strapImage" src="kjetting_rett.png" alt="Antall Parter">
+        </div>
     </div>
 
     <script>
+        // Bildemapping for innfestingsmåte
+        const attachmentImages = {
+            "Rett": "kjetting_rett.png",
+            "Snaret": "kjetting_snaret.png",
+            "Uform": "kjetting_uform.png"
+        };
+
+        // Bildemapping for antall parter
+        const strapImages = {
+            "1": "kjetting_rett.png",
+            "2": "toparter_452.png",
+            "3": "treparter_0.png",
+            "4": "treparter_0.png"
+        };
+
+        // Oppdater bildene basert på brukerens valg
+        function updateImages() {
+            const attachment = document.getElementById("attachment").value;
+            const parts = document.getElementById("parts").value;
+
+            document.getElementById("attachmentImage").src = attachmentImages[attachment] || "kjetting_rett.png";
+            document.getElementById("strapImage").src = strapImages[parts] || "kjetting_rett.png";
+        }
+
         function calculate() {
             const dimension = parseFloat(document.getElementById('dimension').value);
             const attachment = document.getElementById('attachment').value;
@@ -122,7 +183,6 @@
             const angleFactor = parseFloat(document.getElementById('angle').value);
             const symmetryFactor = parseFloat(document.getElementById('symmetry').value);
 
-            // WLL (Working Load Limit) i tonn for hver kjettingdimensjon
             const wllTable = {
                 6: 1.12,
                 8: 2.0,
@@ -136,7 +196,6 @@
 
             let baseLoad = wllTable[dimension] || 0;
 
-            // Justering basert på stroppetype
             const attachmentFactors = {
                 "Rett": 1.0,
                 "Snaret": 0.8,
@@ -144,20 +203,15 @@
             };
 
             let attachmentFactor = attachmentFactors[attachment] || 1.0;
-
-            // Antall parter faktor
-            const partsFactor = {
-                1: 1.0,
-                2: 2.0,
-                3: 3.0,
-                4: 4.0
-            };
-
-            let totalFactor = attachmentFactor * partsFactor[parts] * angleFactor * symmetryFactor;
+            let totalFactor = attachmentFactor * parts * angleFactor * symmetryFactor;
             let maxLoad = baseLoad * totalFactor;
 
             document.getElementById('maxLoad').innerText = maxLoad.toFixed(2);
         }
+
+        window.onload = function() {
+            updateImages();
+        };
     </script>
 </body>
 </html>
